@@ -1,1 +1,0 @@
-2023-11-14 16:59:27 [main] ERROR clevertec.bank.service.impl.UserServiceImpl - Invalid userDto: [ConstraintViolationImpl{interpolatedMessage='Invalid email format', propertyPath=mail, rootBeanClass=class ru.clevertec.bank.dto.UserDto, messageTemplate='Invalid email format'}]

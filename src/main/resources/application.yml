@@ -3,4 +3,4 @@ db.username=postgres
 db.password=pass
 db.driver=org.postgresql.Driver
 cache=LRU
-LFU
+capacity=16

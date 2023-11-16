@@ -4,32 +4,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import ru.clevertec.bank.dao.UserDao;
 import ru.clevertec.bank.entity.User;
+import ru.clevertec.bank.jdbc.ConnectionPool;
+import ru.clevertec.bank.dao.UtilDB;
 
 public class UserDaoImpl implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public UserDaoImpl(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public UserDaoImpl() {
+        this.jdbcTemplate = new JdbcTemplate(ConnectionPool.getDataSource());
     }
 
     public UUID createUser(User user) {
-        String sql = "INSERT INTO clevertec_system.users (first_name, last_name, mail, age) VALUES (?, ?, ?, ?)";
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql,
+            PreparedStatement ps = connection.prepareStatement(UtilDB.CREATE_USER,
                 Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
@@ -42,26 +40,23 @@ public class UserDaoImpl implements UserDao {
     }
 
     public Optional<User> getUserById(UUID id) {
-        String sql = "SELECT * FROM clevertec_system.users WHERE id = ?";
-        return Optional.ofNullable(
-            jdbcTemplate.queryForObject(sql, new Object[]{id}, new UserRowMapper()));
-    }
-
-    public List<User> getAllUsers() {
-        String sql = "SELECT * FROM clevertec_system.users";
-        return jdbcTemplate.query(sql, new UserRowMapper());
+        return Optional.ofNullable(jdbcTemplate.queryForObject(
+            UtilDB.GET_USER_BY_ID,
+            new Object[]{id},
+            new UserRowMapper()));
     }
 
     public void updateUser(User user) {
-        String sql = "UPDATE clevertec_system.users SET first_name = ?, last_name = ?, mail = ?, age = ? WHERE id = ?";
-        jdbcTemplate.update(sql, user.getFirstName(), user.getLastName(), user.getMail(),
+        jdbcTemplate.update(UtilDB.UPDATE_USER,
+            user.getFirstName(),
+            user.getLastName(),
+            user.getMail(),
             user.getAge(),
             user.getId());
     }
 
     public void deleteUser(UUID id) {
-        String sql = "DELETE FROM clevertec_system.users WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(UtilDB.DELETE_USER, id);
     }
 
     private static class UserRowMapper implements RowMapper<User> {

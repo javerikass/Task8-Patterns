@@ -5,24 +5,24 @@ import java.util.Properties;
 
 public class PropertiesManager {
 
-  private static final Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
-  private PropertiesManager() {
-    throw new UnsupportedOperationException();
-  }
-
-  static {
-    try {
-      properties.load(
-          PropertiesManager.class.getClassLoader().getResourceAsStream("application.yml"));
-    } catch (IOException e) {
-      e.printStackTrace();
+    private PropertiesManager() {
+        throw new UnsupportedOperationException();
     }
-  }
 
-  public static String getProperty(String key) {
-    return properties.getProperty(key);
-  }
+    static {
+        try {
+            properties.load(
+                PropertiesManager.class.getClassLoader().getResourceAsStream("application.yml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getProperty(String key) {
+        return properties.getProperty(key);
+    }
 
 }
 
