@@ -1,4 +1,2 @@
-2023-11-16 14:02:55 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2023-11-16 14:02:55 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@21ba0741
-2023-11-16 14:02:55 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2023-11-16 14:02:55 [main] INFO  hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2023-11-16 17:15:33 [Test worker] ERROR ru.clevertec.bank.service.impl.UserServiceImpl - Invalid user data
+2023-11-16 17:15:33 [Test worker] ERROR ru.clevertec.bank.service.impl.UserServiceImpl - Invalid user data

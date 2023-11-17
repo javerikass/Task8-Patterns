@@ -8,18 +8,31 @@ import ru.clevertec.bank.jdbc.PropertiesManager;
 
 public class LFUCache<K, V> implements Cache<K, V> {
 
-    private static final int CAPACITY = Integer.parseInt(PropertiesManager.getProperty("capacity"));
-    private final Map<K, HitRate> cache = new HashMap<>();
-    private final Map<K, V> KV = new HashMap<>();
+    private static final int DEFAULT_CAPACITY = Integer.parseInt(
+        PropertiesManager.getProperty("capacity"));
+    private final int capacity;
+    private final Map<K, HitRate> cache;
+    private final Map<K, V> storage;
 
+    public LFUCache() {
+        this.capacity = DEFAULT_CAPACITY;
+        this.cache = new HashMap<>(capacity);
+        this.storage = new HashMap<>(capacity);
+    }
 
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        this.cache = new HashMap<>(capacity);
+        this.storage = new HashMap<>(capacity);
+    }
+    @Override
     public void put(K key, V value) {
-        V v = KV.get(key);
+        V v = storage.get(key);
         if (v == null) {
-            if (cache.size() == CAPACITY) {
-                K k = getKickedKey();
-                KV.remove(k);
-                cache.remove(k);
+            if (cache.size() == capacity) {
+                K kickedKey = getKickedKey();
+                storage.remove(kickedKey);
+                cache.remove(kickedKey);
             }
             cache.put(key, new HitRate(key, 1, System.nanoTime()));
         } else {
@@ -27,47 +40,53 @@ public class LFUCache<K, V> implements Cache<K, V> {
             hitRate.hitCount += 1;
             hitRate.lastTime = System.nanoTime();
         }
-        KV.put(key, value);
+        storage.put(key, value);
     }
 
+    @Override
     public V get(K key) {
-        V v = KV.get(key);
-        if (v != null) {
+        V value = storage.get(key);
+        if (value != null) {
             HitRate hitRate = cache.get(key);
             hitRate.hitCount += 1;
             hitRate.lastTime = System.nanoTime();
-            return v;
+            return value;
         }
         return null;
     }
 
     @Override
     public void remove(K key) {
-        KV.remove(key);
+        storage.remove(key);
+        cache.remove(key);
     }
 
     private K getKickedKey() {
+        if (cache.isEmpty()) {
+            throw new IllegalStateException("Cache is empty");
+        }
         HitRate min = Collections.min(cache.values());
         return min.key;
     }
 
-    class HitRate implements Comparable<HitRate> {
+    private class HitRate implements Comparable<HitRate> {
 
         K key;
-        Integer hitCount;
-        Long lastTime;
+        int hitCount;
+        long lastTime;
 
-        public HitRate(K key, Integer hitCount, Long lastTime) {
+        public HitRate(K key, int hitCount, long lastTime) {
             this.key = key;
             this.hitCount = hitCount;
             this.lastTime = lastTime;
         }
 
         public int compareTo(HitRate o) {
-            int hr = hitCount.compareTo(o.hitCount);
-            return hr != 0 ? hr : lastTime.compareTo(o.lastTime);
+            int hitCountComparison = Integer.compare(hitCount, o.hitCount);
+            if (hitCountComparison != 0) {
+                return hitCountComparison;
+            }
+            return Long.compare(lastTime, o.lastTime);
         }
-
     }
-
 }

@@ -1,0 +1,2 @@
+2023-11-16 17:15:33 [Test worker] ERROR ru.clevertec.bank.service.impl.UserServiceImpl - Invalid user data
+2023-11-16 17:15:33 [Test worker] ERROR ru.clevertec.bank.service.impl.UserServiceImpl - Invalid user data

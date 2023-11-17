@@ -5,7 +5,6 @@ import java.util.Map;
 import ru.clevertec.bank.cache.Cache;
 import ru.clevertec.bank.jdbc.PropertiesManager;
 
-
 public class LRUCache<K, V> implements Cache<K, V> {
 
     private class Node {
@@ -40,6 +39,16 @@ public class LRUCache<K, V> implements Cache<K, V> {
         tail.prev = head;
     }
 
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        this.cache = new HashMap<>();
+        this.head = new Node(null, null);
+        this.tail = new Node(null, null);
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    @Override
     public V get(K key) {
         Node node = cache.get(key);
         if (node == null) {
@@ -49,6 +58,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
         return node.value;
     }
 
+    @Override
     public void put(K key, V value) {
         Node node = cache.get(key);
         if (node != null) {
