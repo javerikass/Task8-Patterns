@@ -1,0 +1,4 @@
+2023-11-18 14:52:34 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-11-18 14:52:34 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@c9d0d6
+2023-11-18 14:52:34 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-11-18 14:52:34 [main] INFO  hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
