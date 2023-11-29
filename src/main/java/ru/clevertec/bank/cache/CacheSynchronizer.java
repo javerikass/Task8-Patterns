@@ -6,25 +6,16 @@ import java.util.UUID;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import ru.clevertec.bank.cache.impl.LFUCache;
-import ru.clevertec.bank.cache.impl.LRUCache;
+import ru.clevertec.bank.cache.factory.CacheFactoryImpl;
 import ru.clevertec.bank.entity.User;
-import ru.clevertec.bank.jdbc.PropertiesManager;
 
 @Aspect
 public class CacheSynchronizer {
 
     private final Cache<UUID, User> cache;
-    private static final String ALGORITHM = PropertiesManager.getProperty("cache");
 
     public CacheSynchronizer() {
-        if ("LRU".equalsIgnoreCase(ALGORITHM)) {
-            this.cache = new LRUCache<>();
-        } else if ("LFU".equalsIgnoreCase(ALGORITHM)) {
-            this.cache = new LFUCache<>();
-        } else {
-            throw new IllegalArgumentException("Invalid cache algorithm");
-        }
+        this.cache = new CacheFactoryImpl<UUID, User>().createCache();
     }
 
     @Around("execution(* ru.clevertec.bank.dao.UserDao.getUserById(java.util.UUID)) && args(id)")

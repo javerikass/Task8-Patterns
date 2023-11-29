@@ -4,8 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -40,6 +42,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     public Optional<User> getUserById(UUID id) {
+        jdbcTemplate.query(UtilDB.GET_USER_BY_ID, new UserRowMapper());
         return Optional.ofNullable(jdbcTemplate.queryForObject(
             UtilDB.GET_USER_BY_ID,
             new Object[]{id},
