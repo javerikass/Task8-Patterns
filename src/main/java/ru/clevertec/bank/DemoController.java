@@ -12,6 +12,7 @@ import ru.clevertec.bank.dao.impl.UserDaoImpl;
 import ru.clevertec.bank.dto.UserDto;
 import ru.clevertec.bank.jdbc.ConnectionPool;
 import ru.clevertec.bank.mapper.UserMapperImpl;
+import ru.clevertec.bank.printer.impl.PDFprinter;
 import ru.clevertec.bank.service.UserService;
 import ru.clevertec.bank.service.impl.UserServiceImpl;
 import ru.clevertec.bank.validator.impl.UserDtoValidatorImpl;
@@ -23,6 +24,7 @@ public class DemoController {
         new UserDaoImpl(),
         new UserDtoValidatorImpl());
 
+    private final PDFprinter pdFprinter = new PDFprinter();
     private final Gson gson = new Gson();
 
 
@@ -34,17 +36,19 @@ public class DemoController {
             + "\"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n"
             + "\"firstName\": \"John\",\n"
             + "\"lastName\": \"Doe\",\n"
-            + "\"mail\": \"johndoe@example.com\",\n"
+            + "\"mail\": \"johndoe@gmail.com\",\n"
             + "\"age\": 25\n"
             + "}";
         demoController.put(userDto);
-        demoController.post(userDto);
+//        demoController.post(userDto);
         demoController.get(uuid);
-        demoController.delete(uuid);
+//        demoController.delete(uuid);
     }
 
     public UserDto get(UUID id) {
-        return service.getUserById(id);
+        UserDto userById = service.getUserById(id);
+        pdFprinter.printToPDF(userById);
+        return userById;
     }
 
     public void post(String jsonUser) {

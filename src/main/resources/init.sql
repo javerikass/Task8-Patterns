@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users
 
 );
 
-INSERT INTO users (id, first_name, last_name, mail, age)
-VALUES ('37bc2b04-8607-11ee-b9d1-0242ac120002', 'John', 'Doe', 'john.doe@mail.ru', 40),
-       ('3ef4c1f6-8607-11ee-b9d1-0242ac120002', 'Jane', 'Smith', 'jane.smith@gmail.com', 30),
-       ('43c4ec92-8607-11ee-b9d1-0242ac120002', 'Alice', 'Johnson', 'alice.johnson@gmail.com', 28);
+-- INSERT INTO users (id, first_name, last_name, mail, age)
+-- VALUES ('37bc2b04-8607-11ee-b9d1-0242ac120002', 'John', 'Doe', 'john.doe@mail.ru', 40),
+--        ('3ef4c1f6-8607-11ee-b9d1-0242ac120002', 'Jane', 'Smith', 'jane.smith@gmail.com', 30),
+--        ('43c4ec92-8607-11ee-b9d1-0242ac120002', 'Alice', 'Johnson', 'alice.johnson@gmail.com', 28);
